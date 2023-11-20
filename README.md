@@ -58,5 +58,5 @@ http://
 
 　スコアブロックの"Shot"に触れると、雪玉が発射されて、敵プレイヤーを狙うことができます。 
 
-　<img src="https://github.com/KASHIHARA-GITHUB/PinballSnow/assets/69448136/5875a2be-ed06-401f-8dda-8a21fa7224a4" alt="代替テキスト" width="40%" />
-　<img src="https://github.com/KASHIHARA-GITHUB/PinballSnow/assets/69448136/86f41b07-8cfa-45ad-8196-7c7d327e91e4" alt="代替テキスト" width="40%" />
+　<img src="./ゲーム画面1.png" alt="代替テキスト" width="40%" />
+　<img src="./ゲーム画面2.png" alt="代替テキスト" width="40%" />

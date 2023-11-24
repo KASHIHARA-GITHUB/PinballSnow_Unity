@@ -12,10 +12,13 @@ public class SC_Room : MonoBehaviourPunCallbacks {
     // グローバル変数
     private bool GB_InRoom;         // 部屋に参加したら相手を探す処理を行う
     private bool GB_IsMatchingFlag; // 参加後はUpdate関数を処理しないようにする
+    private float GB_Time = 0f;     // 処理速度同期変数 
 
     // 定数
     private const int PLAYERINROOMMAX = 2;    // 最大プレイヤー人数
     private const int PLAYERCONNETCTMAX = 20; // 最大接続人数
+    private const float MAXTIMEOUT = 30f;       // タイムアウト最大時間
+    private const float MAXFRAMETIMEOUT = 0.1f; // フレーム処理間隔最大時間
 
     /// <summary> 
     /// マスターサーバ接続
@@ -52,10 +55,10 @@ public class SC_Room : MonoBehaviourPunCallbacks {
     /// <summary> 
     /// ルーム生成処理※ルームが見つからない場合(コールバック関数)
     /// </summary> 
-    /// <param name="returnCode">コールバックコード</param>
-    /// <param name="message"   >メッセージ</param> 
+    /// <param name="pm_returnCode">コールバックコード</param>
+    /// <param name="pm_message"   >メッセージ</param> 
     /// <returns>なし</returns>
-    public override void OnJoinRandomFailed(short returnCode, string message) {
+    public override void OnJoinRandomFailed(short pm_returnCode, string pm_message) {
         PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = PLAYERINROOMMAX }, TypedLobby.Default);
     }
 
@@ -73,13 +76,28 @@ public class SC_Room : MonoBehaviourPunCallbacks {
         //部屋に参加したら下記の処理を行う
         if (GB_InRoom) {
             // 同時接続20人を超えた
-            if(PhotonNetwork.CountOfPlayers > PLAYERCONNETCTMAX) {
+            if (PhotonNetwork.CountOfPlayers > PLAYERCONNETCTMAX) {
                 CP_WarningText.text = "接続人数が越えました";
                 return;
             }
 
+            // バックグラウンド接続拒否
+            if (Time.smoothDeltaTime > MAXFRAMETIMEOUT) {
+                GB_InRoom = false;
+                PhotonNetwork.Disconnect();
+            }
+
+            // タイムアウト処理
+            GB_Time += Time.deltaTime;
+            if (GB_Time >= MAXTIMEOUT) {
+                GB_Time = 0f;
+                GB_InRoom = false;
+                PhotonNetwork.Disconnect();
+            }
+
             // 2人接続出来たらシーン移動
-            if (PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount) {
+            if (PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount &&
+                GB_InRoom == true) {
                 Debug.Log("CountOfRooms " + PhotonNetwork.CountOfRooms);
                 Debug.Log("CountOfPlayersOnMaster " + PhotonNetwork.CountOfPlayersOnMaster);
                 Debug.Log("CountOfPlayersInRooms " + PhotonNetwork.CountOfPlayersInRooms);

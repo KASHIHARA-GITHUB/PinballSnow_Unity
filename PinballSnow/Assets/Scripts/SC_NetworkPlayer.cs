@@ -10,6 +10,7 @@ public class SC_NetworkPlayer : MonoBehaviourPunCallbacks{
     // グローバル変数
     private const bool WIN = true;       // 勝利
     private const bool LOSE = false;     // 敗北
+    private float GB_Time = 0f;          // 処理速度同期変数 
 
     // プレイヤーのオプション変数
     private struct Player {
@@ -37,8 +38,13 @@ public class SC_NetworkPlayer : MonoBehaviourPunCallbacks{
     /// <param name="message">なし</param> 
     /// <returns>なし</returns>
     public void Update() {
+        // 処理速度を合わせる
+        GB_Time += Time.deltaTime;
+
         // 自身のネットワークプレイヤー
-        if (photonView.IsMine) {
+        if (GB_Time >= 0.01f && photonView.IsMine) {
+            GB_Time = 0f;
+
             // プレイヤーを移動
             MovePlayer();
         }

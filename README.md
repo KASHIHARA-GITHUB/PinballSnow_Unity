@@ -2,7 +2,7 @@
 
 ## URL
 
-http://
+https://unityroom.com/games/pinballsnow
 
 ## ゲーム概要
 

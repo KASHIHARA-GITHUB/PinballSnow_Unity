@@ -60,7 +60,7 @@ public class SC_NetworkBlock : MonoBehaviourPunCallbacks {
                 gameObject.layer = PLAYERONE;
                 break;
             case "NetworkBall2":
-                w_SpriteRenderer.color = new Color(255f, 0f, 100f);
+                w_SpriteRenderer.color = new Color(255f, 0f, 150f);
                 gameObject.layer = PLAYERTWO;
                 break;
             default:
